@@ -1,0 +1,32 @@
+.progress .progress-bar {
+    position: absolute;
+    overflow: hidden;
+    line-height: 26px;
+}
+.progress .progressbar-back-text {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    line-height: 26px;
+    text-align: center;
+    color: #000;
+}
+.progress .progressbar-front-text {
+    display: block;
+    width: 250px;
+    font-size: 12px;
+    line-height: 26px;
+    text-align: center;
+    color: #fff;
+}
+
+.progress-link {
+    cursor: pointer;
+}
+
+.progress {
+    width: 250px;
+    position: relative;
+    height: 26px;
+}
