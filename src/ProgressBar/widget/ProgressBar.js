@@ -1,4 +1,14 @@
-require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
+define([
+"dojo/_base/declare",
+"mxui/widget/_WidgetBase",
+"dijit/_TemplatedMixin",
+"dojo/text!ProgressBar/widget/ui/ProgressBar.html",
+"dojo/dom-style",
+"dojo/html",
+"dojo/dom-class",
+"dojo/on",
+"dojo/_base/lang"
+],
     
     // Name: Mendix 5 Bootstrap Progress Bar
     // Version: 1.1
@@ -16,15 +26,11 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
     // Release notes 1.1:
     // Fixed text being centered on barNode (rewritten html/css)
 
-    function(domStyle, html, domClass, on) {
+    function(declare, _WidgetBase, _TemplatedMixin, widgetTemplate, domStyle, html, domClass, on, lang) {
         "use strict";
-        dojo.provide("ProgressBar.widget.ProgressBar");
-				mxui.dom.addCss(require.toUrl("ProgressBar/widget/ui/ProgressBar.css"));
 
-        mxui.widget.declare("ProgressBar.widget.ProgressBar", {
-            mixins: [mxui.mixin._Contextable, dijit._TemplatedMixin],
+        return declare("ProgressBar.widget.ProgressBar", [ _WidgetBase, _TemplatedMixin ], {
 
-            inputargs: {
                 progressAtt: "",
                 bootstrapStyleAtt: "",
                 barType: "default",
@@ -32,10 +38,9 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
                 width: 0,
                 textColorSwitch: 50,
                 onclickMf: "",
-                classBar: ""
-            },
+                classBar: "",
 
-            templatePath: require.toUrl("ProgressBar/widget/ui/ProgressBar.html"),
+            templateString: widgetTemplate,
             // templated variables 
             // progressNode: null,
             // progressTextNode: null,
@@ -53,7 +58,7 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
             postCreate: function() {
                 // Things that needs be done before start of widget
                 this.buildProgressBar();
-                this.actLoaded();
+                // this.actLoaded();
             },
 
             buildProgressBar: function() {
@@ -79,7 +84,7 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
                 		_attrHandle = null;
 
                 if (this.onclickMf) {
-                    on(this.domNode, "click", dojo.hitch(this, this.onclick));
+                    on(this.domNode, "click", lang.hitch(this, this.onclick));
                     domClass.add(this.domNode, "progress-link");
                 }
 
@@ -94,10 +99,10 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
                     this.updateProgress();
                     _objectHandle = mx.data.subscribe({ // Subscribe to change of the object (refresh)
                         guid: context.trackId,
-                        callback: dojo.hitch(this, function(guid) {
+                        callback: lang.hitch(this, function(guid) {
                             mx.data.get({
                                 guid: guid,
-                                callback: dojo.hitch(this, this.updateProgress)
+                                callback: lang.hitch(this, this.updateProgress)
                             });
                         })
                     });
@@ -106,10 +111,10 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
 						_attrHandle = mx.data.subscribe({ // Subscribe to GUI changes of the progress attribute
 							guid: context.trackId,
 							attr: this.progressAtt,
-							callback: dojo.hitch(this, function(guid) {
+							callback: lang.hitch(this, function(guid) {
 								mx.data.get({
 									guid: guid,
-									callback: dojo.hitch(this, this.updateProgress)
+									callback: lang.hitch(this, this.updateProgress)
 								});
 							})
 						});
@@ -132,7 +137,7 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
                             guids: guids
                         },
                         callback: function() {},
-                        error: dojo.hitch(this, function(error) {
+                        error: lang.hitch(this, function(error) {
                             mx.ui.error("Error while executing MicroFlow: " + this.onclickMf + " : " + error.message);
                         })
                     });
@@ -148,7 +153,7 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
 							actionname: this.progressMf,
 							guids: guids
 						},
-						callback: dojo.hitch(this, function(value) {
+						callback: lang.hitch(this, function(value) {
 							this.value = value;
 							this.setProgress();
 						}),
@@ -206,5 +211,6 @@ require(["dojo/dom-style", "dojo/html", "dojo/dom-class", "dojo/on"],
                 //Nothing to uninitialize
             }
         });
-    }
- );
+    });
+
+require([ "ProgressBar/widget/ProgressBar" ]);
